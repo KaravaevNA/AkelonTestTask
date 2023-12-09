@@ -19,7 +19,7 @@ namespace PracticeTask5
             int vacStartRange = (endYear.DayNumber - startYear.DayNumber - vacParams.VacationIntervals.Min());
 
             int crutch = 0; // Поскольку в методе IsGenerationPossible не до конца реализована проверка на общее кол-во дней отпусков сотрудников с учетом промежутков между ними, здесь используется временная мера в виде проверки на кол-во попыток генерации
-            int crutchTryNumber = vacStartRange * 100;
+            int crutchTryNumber = vacStartRange * 1000;
 
             foreach (var employee in employees)
             {

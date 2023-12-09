@@ -9,9 +9,12 @@ namespace PracticeTask5
         {
             List<Employee> employees = new List<Employee>
             {
-                new Employee("Иванов"),
-                new Employee("Петров"),
-                new Employee("Сидоров")
+                new Employee("Иванов Иван Иванович"),
+                new Employee("Петров Петр Петрович"),
+                new Employee("Юлина Юлия Юлиановна"),
+                new Employee("Сидоров Сидор Сидорович"),
+                new Employee("Павлов Павел Павлович"),
+                new Employee("Георгиев Георг Георгиевич")
             };
 
             VacationParameters vacParams = VacationParameters.Create(DateTime.Today.Year, 28, 3, 30, new int[] { 7, 14 });

@@ -26,13 +26,27 @@ namespace PracticeTask5
         public int MinDaysBetweenSameEmployeeVac { get; }
         public int[] VacationIntervals { get; }
 
-        public VacationParameters(int year, int totalVacationDays, int minDaysBetweenVac, int minDaysBetweenSameEmployeeVac, int[] vacationIntervals)
+        private VacationParameters(int year, int totalVacationDays, int minDaysBetweenVac, int minDaysBetweenSameEmployeeVac, int[] vacationIntervals)
         {
             Year = year;
             TotalVacationDays = totalVacationDays;
             MinDaysBetweenVac = minDaysBetweenVac;
             MinDaysBetweenSameEmployeeVac = minDaysBetweenSameEmployeeVac;
             VacationIntervals = vacationIntervals;
+        }
+
+        public static VacationParameters Create(int year, int totalVacationDays, int minDaysBetweenVac, int minDaysBetweenSameEmployeeVac, int[] vacationIntervals)
+        {
+            VacationParameters parameters = new VacationParameters(year, totalVacationDays, minDaysBetweenVac, minDaysBetweenSameEmployeeVac, vacationIntervals);
+            if (!parameters.IsValidParameters())
+                throw new ArgumentException("Неверные параметры - ошибка в интервалах отпуска");
+            return parameters;
+        }
+
+        private bool IsValidParameters()
+        {
+            int totalVacationDays = TotalVacationDays;
+            return VacationIntervals.All(interval => totalVacationDays % interval == 0);
         }
     }
 }

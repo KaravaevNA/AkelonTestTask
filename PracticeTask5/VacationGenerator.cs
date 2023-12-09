@@ -18,14 +18,15 @@ namespace PracticeTask5
             DateOnly endYear = new DateOnly(vacParams.Year, 12, 31);
             int vacStartRange = (endYear.DayNumber - startYear.DayNumber - vacParams.VacationIntervals.Min());
 
-            int KOCTbIJlb = 0; // Мне жаль
+            int crutch = 0; // Поскольку в методе IsGenerationPossible не до конца реализована проверка на общее кол-во дней отпусков сотрудников с учетом промежутков между ними, здесь используется временная мера в виде проверки на кол-во попыток генерации
+            int crutchTryNumber = vacStartRange * 100;
 
             foreach (var employee in employees)
             {
                 int remainVacationDuration = vacParams.TotalVacationDays;
                 while (remainVacationDuration > 0)
                 {
-                    if (KOCTbIJlb++ == 10000)
+                    if (crutch++ == crutchTryNumber)
                         return false;
 
                     DateOnly startVacation;
@@ -114,16 +115,18 @@ namespace PracticeTask5
             }
         }
 
-        // TODO Проверка на то, что с текущими VacationIntervals теоретически возможна генерация отпусков длиной TotalVacationDays при худшем расположении отпусков сотрудников
+        // Проверка на то, что с текущими VacationIntervals теоретически возможна генерация отпусков длиной TotalVacationDays при худшем распределении отпусков сотрудников
         private static bool IsGenerationPossible(int numberOfEmployees, VacationParameters vacParams)
         {
             int numberOfDays = (new DateOnly(vacParams.Year, 12, 31).DayNumber - new DateOnly(vacParams.Year, 1, 1).DayNumber);
-
-            if (vacParams.TotalVacationDays + vacParams.TotalVacationDays / vacParams.VacationIntervals.Min() * vacParams.MinDaysBetweenSameEmployeeVac > numberOfDays)
-                return false;
-
-            if (numberOfEmployees * (vacParams.TotalVacationDays + vacParams.MinDaysBetweenVac) > numberOfDays)
-                return false;
+            int numberOfDaysAllVacations = vacParams.TotalVacationDays * numberOfEmployees;
+            int maxVacationsSameEmp = vacParams.TotalVacationDays / vacParams.VacationIntervals.Min(); // Берем именно максимально возможное количество отдельных отпусков сотрудника, чтобы рассмотреть худший случай генерации
+            int maxDaysBetweenVacationsSameEmp = maxVacationsSameEmp * vacParams.MinDaysBetweenSameEmployeeVac;
+            int maxDaysBetweenVacationsDifferentEmp = maxVacationsSameEmp * vacParams.MinDaysBetweenVac * numberOfEmployees;
+            
+            if (vacParams.TotalVacationDays + maxDaysBetweenVacationsSameEmp > numberOfDays || // Проверка на то, что отпуск одного сотрудника помещается в выбранный диапазон отпусков, без учета остальных сотрудников
+                numberOfDaysAllVacations + maxDaysBetweenVacationsDifferentEmp > numberOfDays) // Проверка на то, что отпуска всех сотрудников помещаются в выбранный диапазон отпусков, без учета обязательного промежутка между отпусками одного сотрудника. Используется проверка на лучший сценарий генерации
+                return false; // Остается нереализованной проверка на общее количество дней отпусков в случае, если отпуска одного сотрудника идут подряд. В качестве временной меры используется проверка на кол-во повторений с помощью crutch в основном блоке генерации TryRandomGeneration
 
             return true;
         }

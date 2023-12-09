@@ -14,7 +14,8 @@ namespace PracticeTask5
                 new Employee("Сидоров")
             };
 
-            VacationParameters vacParams = new VacationParameters(DateTime.Today.Year, 28, 3, 30, new int[] {7, 14});
+            VacationParameters vacParams = VacationParameters.Create(DateTime.Today.Year, 28, 3, 30, new int[] { 7, 14 });
+
             if (VacationGenerator.TryRandomGeneration(employees, in vacParams))
                 foreach (Employee employee in employees)
                 {
